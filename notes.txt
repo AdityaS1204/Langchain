@@ -1,0 +1,128 @@
+LANGCHAIN:
+open source framework for developing applictions powered by large language models(llms).
+
+why we need langchain ?
+
+alternatives of langchain ?
+
+use of langchain ?
+
+LANGCHAIN COMPONENTS:
+
+1) Models
+2) Prompts
+3) Chains
+4) Indexes
+5) memory
+6) Agents
+
+
+1) Models:
+models act as an interface making the interaction with llm models easy and makes the process of changing models easy with its inbuild functions.
+There are two types of models:
+1) language/chat models.
+2) Embedding models.
+
+Language/chat Models:
+used for interacting with llms.
+takes text and returns text.
+
+ref:https://python.langchain.com/docs/integrations/chat/
+
+Embedding models:
+takes text and returns vector.
+used for converting text into embeddings or vectors and semantic search.
+
+ref: https://python.langchain.com/docs/integrations/text_embedding/
+
+
+2) Prompt:
+Types of prompt that can be created using langchain:
+
+1. Dynamic and reusable prompts:
+ex: 'summarize { topic } in {emotion } tone'.
+
+2. Role Based Prompts:
+ex: system : you are an experienced xyz
+user: tell me about xyz in xyz
+
+3. Few Shot Prompting:
+ we give some examples of input and output of a prompt and ask the model to give output for next prompts in that similar way.
+
+ex: 
+input: "can you explain how to upgrade my plan ?", output: "General Inquiry"
+
+steps:
+examples
+step 2 create an example template
+step 3: Build the few shot prompt template.
+
+3) Chains
+
+chain are used to create pipelines for a bigger tasks,
+for example to create a english to hindi summarization app we need to give text input to llm it trnaslate to hindi which is given as input to another llm which summarizes the text.
+If using Chains the chain handles all the linking as it will make the output of one block as the input of another making the pipeline creation process less hastle.
+
+We can make complex pipeline using chains like:
+- parellel chain
+- Conditional chains
+
+
+4) Indexes:
+Indexes connect your applications to extenals knowledges - such as pdf,wbsites or dbs.
+
+indexes are made up of 
+- Doc loader
+- text splitter
+- vector store 	 
+- retrivers
+
+5) Memory:
+LLM API calls are stateless means every api call made to the model is independent of itself means it does not have any knowledge of past conversions.
+here langchain memory component helps.
+
+• ConversationBufferMemory: Stores a transcript of recent messages. Great for
+short chats but can grow large quickly.
+• ConversationBufferWindowMemory: Only keeps the last N interactions to avoid
+excessive token usage.
+• Summarizer-Based Memory: Periodically summarizes older chat segments to keep
+a condensed memory footprint.
+• Custom Memory: For advanced use cases, you can store specialized state (e-&.,
+the user's preferences or key facts about them) in a custom memory class.
+
+
+6) Agents:
+Agents have reasoning capabilities and access to tools.
+
+agents break a task in several task using various reasoning methods like:
+chain of thoughts:
+break a task into sub tasks.
+for ex:
+can you multiply delhi temperature by 3
+using chai of thought:
+--> [delhi temp]
+--> [multiply by 3]
+
+
+-----------------------------------------------------------------------
+MODELS:
+using langchain we can interact to two types of models:
+- language models
+• LLMs
+• Chat Models
+
+- embedding models
+
+-> Language Models:
+LLMs:
+general purpose models used for raw text generations.they take string or plain text as input and give string orr plain text as output.
+
+Chat Models:
+Language models that are specialized for conversationals tasks. they take sequence of message as input and return chat messages as output. these are used more in comparison to llms. they are traditional newer models.
+
+
+temperature: is a parameter that define the randomness of a language models output. It affects how creative or deterministic the response are. It ranges from 0 to 2.
+lower values (0.0 - 0.3) : more deterministic and predictable o/p.
+higner values (0.7 - 1.5) : more random creative and diverse.
+
+
