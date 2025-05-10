@@ -106,12 +106,12 @@ using chai of thought:
 
 -----------------------------------------------------------------------
 MODELS:
-using langchain we can interact to two types of models:
-- language models
+using langchain we can interact with two types of models:
+-- language models
 • LLMs
 • Chat Models
 
-- embedding models
+-- embedding models
 
 -> Language Models:
 LLMs:
@@ -125,4 +125,22 @@ temperature: is a parameter that define the randomness of a language models outp
 lower values (0.0 - 0.3) : more deterministic and predictable o/p.
 higner values (0.7 - 1.5) : more random creative and diverse.
 
+
+Open Source Models:
+Open source models are freely available models that can be modified , fine tuned, deployed without any restrictions by central providers.
+
+Ways to use opensource models:
+-- download locally
+-- use HF inference API
+
+disadvantages:
+high hardware requirements: requires gpus to run models.
+setup complexity: to run models it requires some dependencies like pytorch, cuda, transformers, etc.
+lack of RLHF:opensource models lack fine tuning on human feedback making them weak in instruction following.
+Limited multimodel abilities: Open model dont support images, audio or video input like close models.
+
+Vector Embedding:
+Vector embeddings are multi-dimensional numerical representations of text (such as words, sentences, or documents) that capture their semantic meaning in a way that can be processed by machine learning models.
+
+semantic search:
 
