@@ -144,3 +144,31 @@ Vector embeddings are multi-dimensional numerical representations of text (such 
 
 semantic search:
 
+
+----------------------------------------------------------------------------
+PROMPTS:
+Prompts are inputs instructions or queries given to models to guide its output.
+
+Static prompts:
+static prompts are the simple fixed prompts
+ex: "summarize attention is all you need paper"
+
+Dynamic Prompts:
+dynamic prompts have the key vlaues entered by user, in dynamic prompts variables can be used to make the prompt dynamic.
+Ex:
+"please summarize the research paper titled "(paper_input)" with the following specifications:
+explaination style:{style_input}
+explaination length:(lenght_input)
+1. Mathematical Details:
+- include relevent mathematical equations if present in the paper.
+- Explain mathematical concepts using simple , intuitive code snippets where aplicable.
+2. analogies:
+- use relatable analogies to simplify complex ideas.
+If certain information is not avaliable in the paper respond with: "insuffcient Information available" instead of guessing.
+insure that the summary provided is correct, acurate , clear and aligned with the provided style and length."
+
+In langchian the we can create dynamic prompts using PromptTemplate function.
+- PromptTemplate function makes the pormpt reusable.
+- we can reuse the prompt template by creating a Json file and can load it where ever needed.
+- have functions to validate prompt template using validate_template attribute.
+These are the main features that makes PromptTemplate a better alternative to f string present in python.
