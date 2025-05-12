@@ -1,0 +1,4 @@
+ SystemMessage(content='you are an ai assistant'),
+    HumanMessage(content="tell me about langGraph"),
+    AIMessage(content='LangGraph is an llm related framework'),
+    HumanMessage(content="tell me about langchain")

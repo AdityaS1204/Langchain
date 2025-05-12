@@ -167,8 +167,26 @@ explaination length:(lenght_input)
 If certain information is not avaliable in the paper respond with: "insuffcient Information available" instead of guessing.
 insure that the summary provided is correct, acurate , clear and aligned with the provided style and length."
 
-In langchian the we can create dynamic prompts using PromptTemplate function.
-- PromptTemplate function makes the pormpt reusable.
-- we can reuse the prompt template by creating a Json file and can load it where ever needed.
+Prompt Template:
+In langchain we can create dynamic prompts using PromptTemplate function.
+- used in single turn messages.
+- PromptTemplate function makes the prompt reusable.
+- we can reuse the prompt template by creating a Json file and can load it where ever needed.(using load_prompt form langchain-core.prompts)
 - have functions to validate prompt template using validate_template attribute.
 These are the main features that makes PromptTemplate a better alternative to f string present in python.
+
+Chat prompt Template:
+For creating dynamic prompt in a multiturn conversation/messages we have chat_promopt_template in langchain.
+- It simplify the process for creating a dynamic prompt for system, human or AI.
+- all the featues like prompt template.
+
+
+Messages:
+Messages help structure the chat history by clearly labeling input from the user and responses from the AI, as well as any system instructions.
+The main types are:
+HumanMessage - user input
+AIMessage - AI response
+SystemMessage - prompts or instructions to guide AI behavior
+
+Message Placeholder:
+A MessagesPlaceholder is used to insert chat history into a prompt at runtime. It allows you to include past messages (like user and AI exchanges) in ongoing or resumed conversations. It's useful when you want the model to consider previous context, even if the conversation was paused or cached.
