@@ -190,3 +190,54 @@ SystemMessage - prompts or instructions to guide AI behavior
 
 Message Placeholder:
 A MessagesPlaceholder is used to insert chat history into a prompt at runtime. It allows you to include past messages (like user and AI exchanges) in ongoing or resumed conversations. It's useful when you want the model to consider previous context, even if the conversation was paused or cached.
+
+
+
+-------------------------------------------------------------------------------------------------
+OUTPUTS:
+
+Structured Output:
+In Langchain structured outputs refers to the practice of having an llm model return response in well defined structure or data format (for example JSON) rather than free format text. This makes the model output easeir to parse and use programmatically.
+
+Ways to get structured outputs:
+-- llms that can generate structured outputs: we can use [with_structured_output function] in langchain.
+-- llms that cannot generate structured outputs: we use output parsers to parse the output.
+
+with_structured_output fuction:
+we call with_structured_output function with the data format before invoking the model.
+when we use with_structured_output function we can get output in two way using the method parameter one is json mode and another is function calling in json mode the output is in json format and function calling is used when we want to call a function as an output used for agent to use tools.
+
+WE can define data format using three ways:
+
+1) TypedDict:
+- In typed dictonaries we define a class with datatypes defined for each key and then we create dictonaries using the class it tells what keys are required and what should be the data type of the value.
+- it does not validate the data it will just show the required data type for the value but does not force the data to be of the the same data type means i can assign a str value to a number type value it will not through error.
+- we can use Annotated to describe the use of the key for ex:
+class review(TypedDict):
+    summary:Annotated[str,"description for the llm to understand what to return for this key"]
+    
+2) Pydantic: It is an data validation and data parseing library for python. It ensures that the data you work with is correct ,structured and type safe.
+-- Can pass default values
+-- optional fields: we can give an optional type to an integer like this => age: optional[int] = None , or optional[int] = str 
+-- coercion is implicit type conversion in python but here pydantic add one more feature over it by converting the input data type to the expected types defined in pydantic model.
+
+3) JSON_schema: 
+- create a json schema for the output and pass it to the with_structured_output function.
+- mostly used when there are more than one language being used in the software.
+
+When to use What ?
+use typeddict if:
+- you only need type hints.
+- you trust the llm to return correct data.
+- you dont need data validation.
+
+Use Pydantic if:
+- you want data validation (eg: stentiment must be '+ve','-ve' or 'neutral')
+- you want default values if the llm misses any fields.
+- you want automatic type conversation.
+
+Use json schema if:
+- you dont want to import extra python libraries.
+- you need validation but dont want python objects.
+- you want to define structure in a standard json format.
+- when you are working with multiple language in backend.
