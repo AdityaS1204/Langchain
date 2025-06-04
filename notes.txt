@@ -241,3 +241,24 @@ Use json schema if:
 - you need validation but dont want python objects.
 - you want to define structure in a standard json format.
 - when you are working with multiple language in backend.
+
+OUTPUT PARSERs:
+
+Output parsers are used for those llms which dont have abilities to give structured output.
+so langchain provides this output parser feature to add that ability to them.
+
+Types of output parser:
+
+1) str output parser:
+- generally used with chains.
+2) Json output parser:
+- cannot decide/enforce the json schema, here the llm decides the schema by default.
+3) structured output parser:
+- structured outpt parser is an output parser in lnagchain that helps extract structured JSON data from llm response based on predfined fields schema.
+- no data validation.
+4) pydantic output parser:
+- pydantic output parser uses pyadntic models to enforce schema validation when parsing llm output.
+- strict schema enforcement
+- easy validation.
+- type safety.
+- seamless integrations.
