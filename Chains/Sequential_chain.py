@@ -20,5 +20,5 @@ parser = StrOutputParser()
 
 chain = prompt1 | model | parser | prompt2 | model | parser
 
-result = chain.invoke({'topic':'RAG - retrival augumented generation'})
+result = chain.invoke({'topic':'RAG - retrieval augumented generation'})
 print(result)
