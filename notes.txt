@@ -262,3 +262,38 @@ Types of output parser:
 - easy validation.
 - type safety.
 - seamless integrations.
+
+CHAINS:
+
+Chains in LangChain are used to combine different components like prompts, models, parsers, etc., in a structured way so you can automate complex tasks step by step. Think of it as chaining different steps of a pipeline together.
+
+types of chains:
+
+1) sequential chain: 
+every part in the chain is executed in sequence.Executes each step one after another.
+
+ex: chain = prompt1 | model | parser | prompt2 | model | parser
+
+2) parellel chain: 
+Runs multiple chains at the same time (in parallel) for different purposes, then combines the results.
+
+ex: parellel_chain = RunnableParallel({
+    'notes': prompt1 | model | parser,
+    'quiz': prompt2 | model | parser
+})
+merge_chain = prompt3 | model | parser
+chain = parellel_chain | merge_chain
+
+3) conditional chain:
+Uses logic (if/else conditions) to decide what to do next based on the input or previous result.
+
+ex: classifier_chain = prompt1 | model | parser2
+
+branch_chain = RunnableBranch(
+    (lambda x: x.sentiment == 'positive', prompt2 | model | parser),
+    (lambda x: x.sentiment == 'negative', prompt3 | model | parser),
+    RunnableLambda(lambda x: "could not find sentiment")
+)
+
+chain = classifier_chain | branch_chain
+
