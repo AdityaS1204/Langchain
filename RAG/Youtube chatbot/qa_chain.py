@@ -10,11 +10,9 @@ load_dotenv()
 
 def build_qa_chain(chunks):
 
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
     vectoreStore = FAISS(chunks, embeddings)
-    retriever = vectoreStore.as_retriever(
-        search_type='similarity', kwargs={'k': 4})
+    retriever = vectoreStore.as_retriever(search_type='similarity', kwargs={'k': 4})
     prompt = PromptTemplate(
         template="""
          you are a helpful assistant.
@@ -31,11 +29,10 @@ def build_qa_chain(chunks):
 
     context_chain = RunnableParallel({
         'context': retriever | RunnableLambda(format_text),
-        'question':RunnablePassthrough()
+        'question': RunnablePassthrough()
     })
-    
+
     model = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001')
     parser = StrOutputParser()
-    
+
     return context_chain | prompt | model | parser
-    
