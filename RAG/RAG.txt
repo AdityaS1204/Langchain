@@ -1,0 +1,181 @@
+RAG (Retrieval Augumented Generation)
+
+
+
+Main components of RAG:
+1) Document loaders
+2) Text Spliters
+3) vector databases
+4) retrievers
+
+1) DOCUMENT LOADERS:
+-- Document loaders are components in langchain used to load data from various sources into a standardized format (usually as doucment objects) which can then be used for chuncking, embedding, retrieval and Generation.
+
+
+most used document loaders:
+- TextLoader: TextLoader is a simple and commonly used document loader in langchin that reads plain text (.txt) files and converts them into document objects.
+- pyPDFLoader
+- webBaseLoader
+- CSVLoader
+
+Two types of laoding methods:
+--> Load():
+-Eager loading( mena loads everything at once)
+- Returns a list of document objects
+- Loads all document immediately into memory
+- best when the number of documents are small.
+- wnat to load everything upfront.
+
+--> lazy_load()
+- lazy loading (loads on demand)
+- returns a generator of document objects
+- Documents are not loaded at once they are fetched one at a time as needed.
+- best when dealing wiht large document or lots of files.
+- want to stream processing (like embedding, chunking) without using lots of memory.
+
+2) TEXT Spliters:
+Text spliting is the process of breaking a large chunk of text like article,html page,PDFs etc into smaller manageable peices(chunks) that an llm can handle efficiently.
+
+Types of spliters:
+- Length based text spliting (characterTextSpliter):
+creates chunks based on the characters length.
+e.g: if chunk_size is 20, chunks with 20 characters are created.
+
+- structure based spliters (recursiveCharacterTextSpliter):
+this spliter first tries to split the text from a paragraph (\n\n) if its not possible because of chunk_size it tries to split from new line (i.e \n) if not possible tries to split from spaces(i.e _) if still not possible it splits on character lvl.
+Most used text spilter as it can get more context which will be helpfull for more accurate semantic search.
+
+- Document structure based text spliter (recursiveCharacterTextSpliter with language):
+same as structure based spliter the main diffrence is here we have access to define the type of documents like, if document is code we can tell about the language used in the documents and the seperator according to the language is used to split the code in the document.
+
+- Semantic meaning based text spliter (semanticSpliter (in experimental stage)):
+In this spliter firstly embedding is generated for every sentence and then we check for cosine similarity or similarity between two consecutive sentence embeddings, if the similarity score of two consecutive embeddings drop drastically then it's assumed that its not in context with the prior sentence and a chunk is create with prior sentences.
+
+3) Vector store:
+
+◦ Typically refers to a lightweight library or service.
+◦ Focuses primarily on storing vectors and performing similarity search.
+◦ May not include traditional database features like transactions (ACID properties), rich query languages (like SQL), or role-based access control (authentication/authorization).
+◦ Ideal for prototyping and smaller-scale applications.
+◦ Example: FAISS (Facebook AI Similarity Search)
+Core Features of a Vector Store:
+
+1. Storage:
+◦ The primary feature is providing an option to store vectors.
+◦ They store both the vectors themselves and their associated metadata (e.g., movie ID, movie name related to the plot vector).
+◦ Storage options include in-memory (quicker lookups, but lost on application close, good for small apps) and on-disk (for durability and large-scale use, persistent across sessions, good for enterprise applications).
+
+2. Similarity Search:
+◦ Every vector store provides the feature to compare a query vector with all stored vectors and generate a similarity score.
+◦This helps in retrieving vectors most similar to the query vector.
+
+3. Indexing for Fast Similarity Searches:
+◦ Vector stores provide a data structure or method that enables fast similarity searches on high-dimensional vectors.
+◦ This addresses the challenge of slow linear searches with large datasets.
+
+◦ Example (Clustering):
+▪ Instead of comparing a query vector with all 10 million stored vectors linearly, the vector store might first cluster the 10 million vectors (e.g., into 10 clusters).
+▪ It then calculates a centroid vector for each cluster.
+▪ When a new query vector arrives, it first calculates similarity with only the 10 centroid vectors.
+▪ It then identifies the most similar centroid's cluster (e.g., Cluster 3) and only performs a similarity search within that specific cluster (e.g., 1 million vectors).
+▪ This significantly reduces the number of comparisons (e.g., 10 comparisons + 1 million comparisons, instead of 10 million) while still finding the best results.
+◦ Other techniques like Approximate Nearest Neighbor (ANN) lookup also exist.
+◦ This intelligent indexing makes the application much faster.
+
+4. CRUD Operations:
+◦ Like traditional databases, vector stores allow you to Add, Retrieve, Update, and Delete vectors (and their associated metadata).
+4. Use Cases of Vector Stores
+• Recommender Systems (as illustrated by the movie example).
+• Any application requiring semantic search between vectors.
+• RAG (Retrieval Augmented Generation) systems, where they are extensively used.
+• Image or multimedia searching
+
+
+4)RETRIEVERS:
+- retrievers are components in langchain that fetches relevant documents from data sources in response to the user's query.
+- There ate multiple types of retrievers.
+- All retrievers in langcchain are runnables.
+
+Types of retrievers:
+
+1) Based on Data Source: Different retrievers work with different types of data sources.
+◦ Examples: Wikipedia Retriever (works with Wikipedia articles), Vector Store Based Retrievers (work with data stored in vector stores), Archive Retriever (works with research papers on archive.org).
+
+2)Based on Search Strategy/Retrieval Mechanism: Different retrievers use different mechanisms to search for documents.
+◦ Examples: MMR (Maximum Marginal Relevance), Multi Query Retriever, Contextual Compression Retriever.
+
+Data Source Based Retrievers (Examples)
+1)Wikipedia Retriever
+◦ Purpose: Queries the Wikipedia API to fetch relevant content for a given query.
+
+◦How it Works:
+▪ You provide a query (e.g., "Albert Einstein").
+▪ It sends the query to the Wikipedia API.
+▪ It retrieves the most relevant articles using internal keyword matching (not semantic search).
+▪ It returns the articles in the format of LangChain Document objects.
+◦ Key Insight: It's a retriever (not just a document loader) because it performs a form of searching and decides relevance based on the search query, implying some intelligence.
+◦ Implementation: You create an object of WikipediaRetriever, specifying the number of top results (k) and the desired language. Then, you call retriever.invoke(query).
+• Vector Store Retriever
+◦ Purpose: Fetches relevant documents from a vector store based on semantic similarity using vector embeddings. It is the most common type of retriever.
+
+◦How it Works:
+▪ Documents are stored in a vector store (e.g., Chroma, FAISS), converted into dense vectors using an embedding model.
+▪ A user enters a query, which is also converted into a vector.
+▪ The query vector is compared with all document vectors to perform a semantic search.
+▪ The top (most similar) results are fetched.
+
+Implementation:
+ After creating your vector store (e.g., Chroma.from_documents), you can create a retriever using vector_store.as_retriever(), specifying the number of results (k). Then, you call retriever.invoke(query).
+◦Clarification (Distinction from direct vector store search): While a vector store can directly perform similarity search, using as_retriever() makes it a runnable object that can be integrated into chains. The main benefit of retrievers is the ability to connect vector stores with advanced search strategies (like MMR, Multi Query, etc.), which the basic similarity_search function does not offer.
+
+ --> Search Strategy Based Retrievers (Examples)
+
+1)MMR (Maximum Marginal Relevance)
+◦ Problem Solved: Normal similarity search can return redundant documents (e.g., multiple documents saying the same thing) even if they are highly relevant. MMR aims to reduce redundancy while maintaining high relevance.
+◦ Core Philosophy: Pick results that are not only relevant to the query but also different from each other.
+
+How it Works:
+▪ It first picks the most relevant document.
+▪ Subsequent picks are documents that are not only relevant but also highly dissimilar from the already selected documents.
+
+Implementation:
+ When creating the retriever from a vector store, set search_type="mmr". You can also set a lambda_mult parameter (between 0 and 1):
+▪ lambda_mult = 1: Behaves like normal similarity search (maximises relevance).
+▪ lambda_mult = 0: Maximises diversity.
+▪ Values between 0 and 1 balance relevance and diversity.
+
+2) Multi Query Retriever
+◦Problem Solved: Ambiguous user queries can lead to poor quality retrieved documents because the meaning is unclear, making it difficult to find truly relevant information.
+◦Core Philosophy: Eliminate ambiguity in the user's query by generating multiple diverse but related queries.
+
+How it Works:
+▪ The ambiguous user query is sent to an LLM.
+▪ The LLM generates multiple, less ambiguous versions of the original query.
+▪ These multiple queries are then sent to a normal retriever (e.g., similarity search-based) in parallel.
+▪ All the retrieved documents from these parallel searches are merged, and duplicates are removed.
+▪ The top results are then shown to the user.
+
+Benefit:
+ It ensures that even with ambiguous inputs, the system retrieves documents that broadly cover the user's intent, leading to more comprehensive and relevant results compared to a single, broad query.
+
+Implementation:
+ Import MultiQueryRetriever. Use MultiQueryRetriever.from_llm() and provide:
+▪ The LLM to be used for generating new queries.
+▪ The base retriever (e.g., a similarity search retriever) that will perform the actual document retrieval for each generated query.
+
+3)Contextual Compression Retriever
+Problem Solved: Documents in a vector store might be long or contain mixed information, leading to irrelevant content being returned alongside relevant information for a specific query. This can degrade user experience and waste LLM context window space.
+◦ Core Philosophy: Improve retrieval quality by compressing documents after retrieval, keeping only the content relevant to the user's query.
+
+How it Works:
+▪ It consists of two parts: a base retriever and a compressor.
+▪ The base retriever (e.g., a standard similarity search retriever) first fetches a set of potentially relevant documents.
+▪ These retrieved documents, along with the original user query, are then sent to a compressor (usually an LLM).
+▪ The compressor trims each document, removing all parts that are irrelevant to the specific query, ensuring only the pertinent content remains.
+
+When to Use: When documents are very long, contain mixed information, to reduce LLM context length, or to improve the accuracy of a RAG pipeline.
+
+Implementation:
+ Import ContextualCompressionRetriever and LLMChainExtractor. Create a base retriever and an LLMChainExtractor (which acts as the compressor, using an LLM). Then, instantiate ContextualCompressionRetriever with both the base retriever and the compressor.
+
+ 
