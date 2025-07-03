@@ -11,7 +11,7 @@ load_dotenv()
 def build_qa_chain(chunks):
 
     embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
-    vectoreStore = FAISS(chunks, embeddings)
+    vectoreStore = FAISS.from_documents(chunks, embeddings)
     retriever = vectoreStore.as_retriever(search_type='similarity', kwargs={'k': 4})
     prompt = PromptTemplate(
         template="""
