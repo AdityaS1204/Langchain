@@ -9,7 +9,7 @@ load_dotenv()
 st.set_page_config(page_title='Youtube Chatbot',layout='centered')
 st.header('Chat with Youtube videos')
 
-yt_video,language,question = show_ui()
+yt_video,question,language = show_ui()
 
 if st.button('send'):
     if not yt_video or not question:
@@ -20,8 +20,8 @@ if st.button('send'):
                 video_id = extract_yt_video_id(yt_video)
                 chunks = transcript_chunks(video_id,language)
                 qa_chain = build_qa_chain(chunks)
+                print(question)
                 result = qa_chain.invoke(question)
-                st.success("Response:")
                 st.write(result)
             except Exception as e:
                 st.error(f"Error:{str(e)}")        
