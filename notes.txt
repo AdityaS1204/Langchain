@@ -297,3 +297,57 @@ branch_chain = RunnableBranch(
 
 chain = classifier_chain | branch_chain
 
+ RUNNABLES
+
+Types of runnables:
+1) Task specific runnables
+2) Runnable Primitive
+
+Runnable Primitive:
+1.Runnable Sequence:
+◦Purpose: Helps to sequentially connect two or more runnables.
+
+◦How it works: The output of the first runnable automatically becomes the input for the next runnable in the sequence. There is no restriction on how many runnables can be connected.
+◦This is conceptually similar to the RunnableConnector built in the previous video.
+
+◦Example Use Case: Creating a chain where a PromptTemplate's output goes to an LLM, and the LLM's output goes to a StringOutputParser to generate a joke. It can also extend to more complex sequential flows, like generating a joke and then explaining it by passing the joke to another prompt, then an LLM, and finally a parser.
+
+2.Runnable Parallel:
+◦ Purpose: Helps to create parallel chains, allowing multiple runnables to execute simultaneously.
+
+◦ How it works:
+▪ Each runnable in the parallel chain receives the same input.
+▪ They process the input independently and in parallel.
+▪ The output is a dictionary of outputs, where each key corresponds to the output of a specific parallel branch.
+
+◦ Example Use Case: Taking a topic (e.g., "AI") and simultaneously sending it to two different LLMs (or the same model with different prompts). One LLM generates a tweet, and the other generates a LinkedIn post. Both outputs are then received as a dictionary.
+
+3.Runnable Passthrough:
+◦ Purpose: A special runnable primitive that returns its input as its output, without any modification or processing.
+
+◦ How it works: If you send "2" as input, it returns "2". If you send a dictionary, it returns the exact same dictionary.
+
+◦ Usefulness: It is useful in scenarios where you need to pass an intermediate output through a chain without altering it, while other branches might be processing that output.
+
+◦ Example Use Case: In a chain that generates a joke and its explanation, RunnablePassthrough can be used in a parallel branch to ensure the generated joke is also outputted, alongside the explanation, as part of a dictionary, because the default sequential chain would only output the final explanation.
+
+4.Runnable Lambda:
+◦ Purpose: Allows you to convert any Python function into a runnable.
+
+◦ How it works: Once a Python function is converted into a runnable, it can be seamlessly integrated into any chain, just like other runnables. This enables the inclusion of custom logic or pre-processing steps directly within a LangChain workflow.
+
+◦ Example Use Case: In a joke generation application, after generating the joke, a RunnableLambda can be used in a parallel branch to count the number of words in the joke (a task LLMs are not good at). The RunnableLambda encapsulates a Python function for word counting, allowing both the joke and its word count to be returned.
+
+5. Runnable Branch:
+◦ Purpose: Used for creating conditional chains, acting as an "if-else" statement within LangChain's ecosystem.
+
+◦ How it works: It takes a series of conditions (defined by lambda functions) and corresponding runnables (chains). Based on which condition evaluates to true, the respective runnable (branch) is triggered. A default condition can be provided for cases where none of the explicit conditions are met.
+
+◦ Example Use Case: Processing customer emails based on their content (e.g., complaint, refund, general query) and triggering different subsequent actions. Another example is generating a report and then conditionally summarising it if it exceeds a certain word count (e.g., 500 words), or simply printing it as is if it's shorter.
+LangChain Expression Language (LCEL)
+
+• Concept: LangChain creators observed that RunnableSequence is very frequently used to build sequential chains.
+
+• Purpose: To provide a simpler, more declarative way to define sequential chains.
+
+• Current Implementation: Instead of instantiating RunnableSequence explicitly, you can now use the pipe (|) operator to chain runnables, like R1 | R2 | R3. This syntax is known as LCEL.

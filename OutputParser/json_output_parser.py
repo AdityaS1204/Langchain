@@ -18,5 +18,5 @@ template = PromptTemplate(
 prompt = template.format()
 
 chain = template | model | parser
-result = chain.invoke({}) # need to pass an empty object if the input variable in prompt template in null
+result = chain.invoke({}) 
 print(result)
