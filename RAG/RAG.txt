@@ -1,7 +1,5 @@
 RAG (Retrieval Augumented Generation)
 
-
-
 Main components of RAG:
 1) Document loaders
 2) Text Spliters
